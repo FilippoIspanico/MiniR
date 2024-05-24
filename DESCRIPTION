@@ -1,0 +1,5 @@
+Package: MiniR
+Type: Package
+Title: Utility functions for Applied Statistics Exam
+Version: 0.0.1.0
+RoxygenNote: 7.3.1
