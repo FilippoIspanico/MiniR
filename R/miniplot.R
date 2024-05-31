@@ -23,6 +23,7 @@
 #' delta.0 <- c(2, 3, 3)
 #' plot.intervals(BonfCI, SimCI, delta.0)
 #'
+#' @export plot.intervals
 #' @export
 
 plot.intervals <- function(BonfCI = NULL, SimCI = NULL, delta.0, legend.position = 'bottomright') {

@@ -3,6 +3,7 @@
 S3method(plot,intervals)
 export(bonf.T2)
 export(pc.interpretation)
+export(plot.intervals)
 export(plot_decision_boundaries)
 export(sim.T2)
 importFrom(ggplot2,aes_string)
