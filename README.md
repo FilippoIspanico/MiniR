@@ -1,4 +1,4 @@
-*Installation*
+# Installation
 
 To install in R studio:
 ```
@@ -7,4 +7,6 @@ install_github("FilippoIspanico/MiniR")
 library(MiniR)
 ```
 
-*Available functions*
+# Available functions 
+
+
