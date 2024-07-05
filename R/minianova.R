@@ -229,6 +229,7 @@ m.aov.hptest = function(data, effect1, effect2 = NULL){
   }
   
   par(mfrow = c(length(treat1), length(treat2)))
+  column_names = character(0)  
   for(i in 1:length(treat1)){
     for(j in 1:length(treat2)){
       
@@ -247,12 +248,13 @@ m.aov.hptest = function(data, effect1, effect2 = NULL){
       image(cov(data.subset), main = paste("cov", effect_label1, "-", effect_label2))
       cat("\n")
       
+      column_names = c(column_names, paste(effect_label1, effect_label2, sep = "-"))
     }
   }
   par(mfrow = c(1, 1))
   rownames(p.values) = "mvn - p.value"
   print(interaction(treat1, treat2))
-  colnames(p.values) = interaction(treat1, treat2)
+  colnames(p.values) = column_names
   return(p.values)
 }
 
