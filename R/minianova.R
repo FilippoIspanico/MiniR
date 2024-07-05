@@ -96,5 +96,164 @@ If you want to compute all differnces remove the input k from the function call!
   return(CI)
 }
 
+#' Multivariate Analysis of Variance Homogeneity and Normality Test
+#'
+#' This function performs homogeneity and normality tests for multivariate analysis of variance (MANOVA) 
+#' or univariate analysis of variance (ANOVA) designs. It can handle one-way and two-way designs for 
+#' both univariate and multivariate data.
+#'
+#' @param data A data frame or vector containing the response variable(s).
+#' @param effect1 A vector specifying the levels of the first factor.
+#' @param effect2 An optional vector specifying the levels of the second factor for two-way designs. Default is NULL.
+#'
+#' @return The function returns different objects based on the input:
+#'   \itemize{
+#'     \item For univariate data with one factor: A matrix with Shapiro-Wilk test p-values and variances for each level of effect1.
+#'     \item For multivariate data with one factor: A vector of Mardia's multivariate normality test p-values for each level of effect1.
+#'     \item For univariate data with two factors: A matrix with Shapiro-Wilk test p-values and variances for each combination of effect1 and effect2.
+#'     \item For multivariate data with two factors: A vector of Mardia's multivariate normality test p-values for each combination of effect1 and effect2.
+#'   }
+#'
+#' @details 
+#' The function uses Shapiro-Wilk test for univariate normality and Mardia's test (from the MVN package) 
+#' for multivariate normality. It also calculates variances (for univariate data) or covariance matrices 
+#' (for multivariate data) for each group.
+#' 
+#' For multivariate data, the function produces plots of the covariance matrices.
+#'
+#' @note 
+#' This function requires the 'MVN' package for multivariate normality tests. 
+#' Make sure it's installed before using this function for multivariate data.
+#'
+#' @export
+#' @export m.aov.hptest
+#'
+#' @examples
+#' \dontrun{
+#' # One-way univariate example
+#' data <- rnorm(100)
+#' effect1 <- rep(c("A", "B"), each = 50)
+#' result1 <- m.aov.hptest(data, effect1)
+#'
+#' # Two-way multivariate example
+#' data <- data.frame(y1 = rnorm(120), y2 = rnorm(120))
+#' effect1 <- rep(c("X", "Y", "Z"), each = 40)
+#' effect2 <- rep(rep(c("Low", "High"), each = 20), 3)
+#' result2 <- m.aov.hptest(data, effect1, effect2)
+#' }
+#'
+#' @importFrom graphics par image
+#' @importFrom stats var cov shapiro.test
+#' @importFrom MVN mvn
+
+m.aov.hptest = function(data, effect1, effect2 = NULL){
+  if (!requireNamespace("MVN", quietly = TRUE)) {
+    stop("Package 'MVN' is required. Please install it.")
+  }
+  
+  if(class(data) == "data.frame"){
+    p = ncol(data)
+  }else{
+    data = data.frame(data)
+    p = 1
+  }
+  
+  
+  treat1 = unique(effect1)
+  treat2 = unique(effect2)
+  
+  p.values = NULL
+  S = NULL
+  
+  
+  if(is.null(effect2) & p == 1){
+    
+    for(i in 1:length(treat1)){
+      indexes = which(effect1 == treat1[i])
+      data.subset = data[indexes, ]
+      p.values = cbind(
+        p.values, 
+        shapiro.test(data.subset)$p.value
+      )
+      S  = cbind(S, var(data.subset))
+    }
+    
+    result = rbind(
+      p.values, S)
+    rownames(result) = c("shapiro p-value", "variance")
+    
+    return(result)
+  }
+  
+  if(is.null(effect2)){
+    par(mfrow = c(1, length(treat1)))
+    for(i in 1:length(treat1)){
+      indexes = which(effect1 == treat1[i])
+      data.subset = data[indexes, ]
+      
+      p.values = cbind(
+        p.values,
+        MVN::mvn(data.subset)$multivariateNormality$`p value`
+      )
+      effect_label = as.character(treat1[i])
+      cat("covariance matrix of effect: ",effect_label, "\n")
+      image(cov(data.subset), main = paste("cov", effect_label))
+      print(cov(data.subset))
+      cat("\n")
+    }
+    par(mfrow = c(1, 1))
+    rownames(p.values) = "mvn - p.value"
+    colnames(p.values) = treat1
+    return(p.values)
+  }
+  
+  if(p == 1){
+    for(i in 1:length(treat1)){
+      for(j in 1:length(treat2)){
+        
+        indexes = which(effect1 == treat1[i] & effect2 == treat2[j])
+        data.subset = data[indexes, ]
+        p.values = cbind(
+          p.values, 
+          shapiro.test(data.subset)$p.value
+        )
+        S  = cbind(S, var(data.subset))
+      }
+    }
+    
+    result = rbind(
+      p.values, S)
+    rownames(result) = c("shaprio p-value", "variance")
+    
+    return(result)
+  }
+  
+  par(mfrow = c(length(treat1), length(treat2)))
+  for(i in 1:length(treat1)){
+    for(j in 1:length(treat2)){
+      
+      indexes = which(effect1 == treat1[i] & effect2 == treat2[j])
+      data.subset = data[indexes, ]
+      
+      p.values = cbind(
+        p.values,
+        MVN::mvn(data.subset)$multivariateNormality$`p value`
+      )
+      effect_label1 = as.character(treat1[i])
+      effect_label2 = as.character(treat2[j])
+      
+      cat("covariance matrix of effects: ",effect_label1, "-", effect_label2, "\n")
+      print(cov(data.subset))
+      image(cov(data.subset), main = paste("cov", effect_label1, "-", effect_label2))
+      cat("\n")
+      
+    }
+  }
+  par(mfrow = c(1, 1))
+  rownames(p.values) = "mvn - p.value"
+  colnames(p.values) = interaction(treat1, treat2)
+  return(p.values)
+}
+
 
 
