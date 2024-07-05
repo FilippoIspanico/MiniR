@@ -253,7 +253,7 @@ m.aov.hptest = function(data, effect1, effect2 = NULL){
   }
   par(mfrow = c(1, 1))
   rownames(p.values) = "mvn - p.value"
-  print(interaction(treat1, treat2))
+
   colnames(p.values) = column_names
   return(p.values)
 }
