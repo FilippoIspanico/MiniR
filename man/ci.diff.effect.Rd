@@ -11,7 +11,7 @@ ci.diff.effect(effect1, effect2, alpha, k, g, n, mu, Spool, effect.names)
 
 \item{effect2}{Integer. Index of the second effect.}
 
-\item{alpha}{Numeric. Significance level (e.g., 0.05 for 95% confidence).}
+\item{alpha}{Numeric. Significance level (e.g. 0.05 for 95 percent confidence).}
 
 \item{k}{Integer. Total number of intervals being calculated (for Bonferroni correction).}
 

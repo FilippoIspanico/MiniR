@@ -5,7 +5,7 @@
 #'
 #' @param effect1 Integer. Index of the first effect.
 #' @param effect2 Integer. Index of the second effect.
-#' @param alpha Numeric. Significance level (e.g., 0.05 for 95% confidence).
+#' @param alpha Numeric. Significance level (e.g. 0.05 for 95 percent confidence).
 #' @param k Integer. Total number of intervals being calculated (for Bonferroni correction).
 #' @param g Integer. Number of groups or treatments.
 #' @param n Numeric vector. Sample sizes for each group.
