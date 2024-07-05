@@ -3,3 +3,8 @@ Type: Package
 Title: Utility functions for Applied Statistics Exam
 Version: 0.0.1.0
 RoxygenNote: 7.3.1
+Description: A more detailed description of what your package does. 
+Encoding: UTF-8
+License: `use_mit_license()`
+Author: Filippo Mininno
+Maintainer: Filippo Mininno <filippo.mininno@mail.polimi.it>
