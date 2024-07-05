@@ -18,6 +18,8 @@
 #'
 #' @examples
 #' ci.diff.effect(1, 2, 0.05, 3, 3, c(10, 10, 10), c(5, 6, 7), 2, c("A", "B", "C"))
+#' @export ci.diff.effect
+#' @export
 ci.diff.effect = function(effect1, effect2, alpha, k, g, n, mu, Spool, effect.names){
   
   quantile = qt(1-alpha/2/k, sum(n)-g)
@@ -55,6 +57,8 @@ ci.diff.effect = function(effect1, effect2, alpha, k, g, n, mu, Spool, effect.na
 #'
 #' @note If k is manually set, it should only be done when the problem specifically
 #'       asks to compute a subset of all differences. For all differences, leave k as NULL.
+#' @export aov.bci.diff
+#' @export
 aov.bci.diff  = function(fit.aov, effect.factor, mu, alpha, k = NULL, round.3 = TRUE){
   
   stopifnot("Input effect.factor must be the factor of all treatments. It must be of class factor. " = is.factor(effect.factor))
