@@ -8,3 +8,7 @@ Encoding: UTF-8
 License: `use_mit_license()`
 Author: Filippo Mininno
 Maintainer: Filippo Mininno <filippo.mininno@mail.polimi.it>
+Imports: 
+ ggplot2,
+ MASS,
+ gridExtra

@@ -154,44 +154,31 @@ pc.interpretation = function (pc.result, data, number_pcs = 3) {
 
 
 
-
-#' Plot Decision Boundaries for LDA and QDA Models
+#' Plot Decision Boundaries for LDA or QDA Models
 #'
-#' This function plots the decision boundaries for Linear Discriminant Analysis (LDA) and Quadratic Discriminant Analysis (QDA) models using ggplot2. It visualizes the separation of different classes in the feature space based on the model's predictions.
+#' This function creates a plot of decision boundaries for Linear Discriminant Analysis (LDA) or Quadratic Discriminant Analysis (QDA) models using ggplot2.
 #'
-#' @param formula A formula specifying the model. The left-hand side of the formula should be the response variable, and the right-hand side should be the predictor variables.
+#' @param formula A formula specifying the model.
 #' @param data A data frame containing the variables in the formula.
-#' @param fit.result A fitted model object of class \code{lda} or \code{qda} from the \code{\link[MASS]{lda}} or \code{\link[MASS]{qda}} functions, respectively.
+#' @param fit.result An object of class \code{lda} or \code{qda}, representing the fitted model.
 #'
-#' @return A ggplot object displaying the decision boundaries and the data points. Points are colored by their true class, and the background is shaded according to the predicted class.
+#' @return A ggplot object showing the decision boundaries and the data points.
 #'
-#' @details The function works as follows:
-#' \itemize{
-#'   \item It extracts the feature variables and response variable from the formula and data.
-#'   \item It creates a grid of points spanning the feature space.
-#'   \item It predicts the class for each point in the grid using the provided LDA or QDA model.
-#'   \item It uses ggplot2 to plot the decision boundaries and data points.
-#' }
+#' @importFrom ggplot2 ggplot aes_string geom_point geom_tile scale_color_manual scale_fill_manual labs theme_minimal ggtitle
+#' @importFrom stats model.frame model.matrix model.response predict
 #' 
-#' @note The function currently supports only two feature variables.
 #'
 #' @examples
 #' \dontrun{
 #' library(MASS)
 #' library(ggplot2)
 #' library(gridExtra)
-#' 
 #' data(iris)
-#' lda_model <- lda(Species ~ Sepal.Length + Sepal.Width, data = iris)
-#' plot_decision_boundaries(Species ~ Sepal.Length + Sepal.Width, iris, lda_model)
+#' fit <- lda(Species ~ Sepal.Length + Sepal.Width, data = iris)
+#' plot_decision_boundaries(Species ~ Sepal.Length + Sepal.Width, iris, fit)
 #' }
 #'
-#' @importFrom ggplot2 ggplot aes_string geom_point geom_tile scale_color_manual scale_fill_manual labs theme_minimal ggtitle
-#' @importFrom stats model.frame model.matrix model.response
-#'
-#' @export
-#' 
-#' 
+
 
 plot_decision_boundaries <- function(formula, data, fit.result) {
   # Extract features and labels from the formula and data
