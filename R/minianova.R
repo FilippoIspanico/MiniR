@@ -258,5 +258,32 @@ m.aov.hptest = function(data, effect1, effect2 = NULL){
   return(p.values)
 }
 
+#' Custom version of colMeans
+#'
+#' colMeans but works also when p=1
+#'
+#' @param data A data frame or vector .
+#' 
+#' @export
+#' @export colMeans
+#'
+
+colMeans = function(data){
+  
+  p = ncol(data)
+  if(is.null(p))
+  {
+    result = matrix(mean(data), nrow = 1, ncol = 1)
+    return(result)
+  }
+  
+  if( p == 1){
+    result = matrix(mean(data), nrow = 1, ncol = 1)
+    return(result)
+  }
+  
+  return(base::colMeans(data))
+}
+
 
 

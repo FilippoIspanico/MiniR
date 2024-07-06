@@ -3,6 +3,7 @@
 S3method(plot,intervals)
 export(aov.bci.diff)
 export(ci.diff.effect)
+export(colMeans)
 export(m.aov.hptest)
 export(pc.interpretation)
 export(plot.intervals)
