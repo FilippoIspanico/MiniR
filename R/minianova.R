@@ -277,8 +277,8 @@ colMeans = function(data){
     return(result)
   }
   
-  if( p == 1){
-    result = matrix(mean(data), nrow = 1, ncol = 1)
+  if(p == 1){
+    result = matrix(mean(data[,1]), nrow = 1, ncol = 1)
     return(result)
   }
   
