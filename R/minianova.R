@@ -296,13 +296,17 @@ tau = function(data, treat, effect, treat2 = NULL, effect2 = NULL){
 }
 
 
-
-CI.diff = function(tau1, tau2, pos, n1, n2, k.bonf, alpha, fit.manova){
+CI.diff = function(tau1, tau2, pos, n1, n2, k.bonf, alpha, fit.manova, p){
   
-  Spool = summary(fit.manova)$SS$Residuals
-  Spool = Spool/fit.manova$df.residual
+  if(p != 1){
+    Spool = summary(fit.manova)$SS$Residuals
+    Spool = Spool/fit.manova$df.residual
+  }else{
+    Spool = matrix(0, nrow = 1, ncol = 1)
+    Spool[1, 1] = sum(fit.manova$residuals^2)/fit.manova$df.residual
+  }
   
-  quantile = qt(1-alpha/2/k, fit.manova$df.residual)
+  quantile = qt(1-alpha/2/k.bonf, fit.manova$df.residual)
   correction = sqrt(Spool[pos, pos]*(1/n1 + 1/n2))
   
   ci = cbind(
@@ -318,12 +322,17 @@ CI.diff = function(tau1, tau2, pos, n1, n2, k.bonf, alpha, fit.manova){
 
 
 
-CI.effect = function(tau1, pos, n1, x.mean, n.tot, k.bonf, alpha, fit.manova){
+CI.effect = function(tau1, pos, n1, x.mean, n.tot, k.bonf, alpha, fit.manova, p){
   
-  Spool = summary(fit.manova)$SS$Residuals
-  Spool = Spool/fit.manova$df.residual
+  if(p != 1){
+    Spool = summary(fit.manova)$SS$Residuals
+    Spool = Spool/fit.manova$df.residual
+  }else{
+    Spool = matrix(0, nrow = 1, ncol = 1)
+    Spool[1, 1] = sum(fit.manova$residuals^2)/fit.manova$df.residual
+  }
   
-  quantile = qt(1-alpha/2/k, fit.manova$df.residual)
+  quantile = qt(1-alpha/2/k.bonf, fit.manova$df.residual)
   correction = sqrt(Spool[pos, pos]*(1/n1 + 1/n.tot))
   
   ci = cbind(
@@ -337,12 +346,17 @@ CI.effect = function(tau1, pos, n1, x.mean, n.tot, k.bonf, alpha, fit.manova){
 
 
 
-CI = function(tau1, pos, n1, k.bonf, alpha, fit.manova){
+CI = function(tau1, pos, n1, k.bonf, alpha, fit.manova, p){
   
-  Spool = summary(fit.manova)$SS$Residuals
-  Spool = Spool/fit.manova$df.residual
+  if(p != 1){
+    Spool = summary(fit.manova)$SS$Residuals
+    Spool = Spool/fit.manova$df.residual
+  }else{
+    Spool = matrix(0, nrow = 1, ncol = 1)
+    Spool[1, 1] = sum(fit.manova$residuals^2)/fit.manova$df.residual
+  }
   
-  quantile = qt(1-alpha/2/k, fit.manova$df.residual)
+  quantile = qt(1-alpha/2/k.bonf, fit.manova$df.residual)
   correction = sqrt(Spool[pos, pos]*(1/n1))
   
   ci = cbind(
@@ -485,7 +499,7 @@ manova.bonferroni = function(fit.manova, data, effects1, effects2 = NULL, k.bonf
         n1 = length(which(effects1 == treatments1[i]))
         n2 = length(which(effects1 == treatments1[j]))
         
-        ci.diff[row, ] = CI.diff(tau1[, i], tau1[, j], pos, n1, n2, k.bonf, alpha, fit.manova = fit.manova)
+        ci.diff[row, ] = CI.diff(tau1[, i], tau1[, j], pos, n1, n2, k.bonf, alpha, fit.manova = fit.manova, p)
         rownames[row] = sprintf("%s - %s [%d]", treatments1[i], treatments1[j], pos)
         row = row + 1
       }
@@ -511,7 +525,7 @@ manova.bonferroni = function(fit.manova, data, effects1, effects2 = NULL, k.bonf
           n1 = length(which(effects2 == treatments2[i]))
           n2 = length(which(effects2 == treatments2[j]))
           
-          ci.diff[row, ] = CI.diff(tau2[, i], tau2[, j], pos, n1, n2, k.bonf, alpha, fit.manova = fit.manova)
+          ci.diff[row, ] = CI.diff(tau2[, i], tau2[, j], pos, n1, n2, k.bonf, alpha, fit.manova = fit.manova, p)
           rownames[row] = sprintf("%s - %s [%d]", treatments2[i], treatments2[j], pos)
           row = row + 1
         }
@@ -519,7 +533,6 @@ manova.bonferroni = function(fit.manova, data, effects1, effects2 = NULL, k.bonf
     rownames(ci.diff) = rownames
     ci.diff.tau2 = ci.diff
   }
-  
   
   
   
@@ -535,7 +548,7 @@ manova.bonferroni = function(fit.manova, data, effects1, effects2 = NULL, k.bonf
     for(pos in 1:p){
       n1 = length(which(effects1 == treatments1[i]))
       ci.effect.tau1[row, ] = CI.effect(tau1[,i], pos = pos, n1 = n1, x.mean = general.mean, n.tot = nrow(data),
-                                        k.bonf = k.bonf, alpha = alpha, fit.manova = fit.manova)
+                                        k.bonf = k.bonf, alpha = alpha, fit.manova = fit.manova, p)
       rownames[row] = sprintf("%s [%d]", treatments1[i], pos)
       row = row + 1                             
       
@@ -557,7 +570,7 @@ manova.bonferroni = function(fit.manova, data, effects1, effects2 = NULL, k.bonf
       for(pos in 1:p){
         n1 = length(which(effects2 == treatments2[i]))
         ci.effect.tau2[row, ] = CI.effect(tau2[,i], pos = pos, n1 = n1, x.mean = general.mean, n.tot = nrow(data),
-                                          k.bonf = k.bonf, alpha = alpha, fit.manova = fit.manova)
+                                          k.bonf = k.bonf, alpha = alpha, fit.manova = fit.manova, p)
         rownames[row] = sprintf("%s [%d]", treatments2[i], pos)
         row = row + 1                             
         
@@ -576,7 +589,6 @@ manova.bonferroni = function(fit.manova, data, effects1, effects2 = NULL, k.bonf
                 ci.effect.tau1 = ci.effect.tau1, ci.effect.tau2 = ci.effect.tau2)
   return(result)
 }
-
 
 
 
