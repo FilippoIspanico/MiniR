@@ -8,5 +8,8 @@ library(MiniR)
 ```
 
 # Available functions 
-
-
+After installing the library run in R
+```
+?MiniR
+```
+and then, after the doc pages opens, click on INDEX. You will see the list of available functions
